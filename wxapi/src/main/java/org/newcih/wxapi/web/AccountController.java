@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author NEWCIH
@@ -24,7 +23,7 @@ public class AccountController extends BaseWxController {
     }
 
     @PostMapping("createQrCode")
-    public DefaultResponse createQrCode(@RequestBody CreateQrCodeParam param, @ApiIgnore WxInfo wxInfo) {
+    public DefaultResponse createQrCode(@RequestBody CreateQrCodeParam param, WxInfo wxInfo) {
         return DefaultResponse.success(accountService.createQrCode(param, wxInfo));
     }
 

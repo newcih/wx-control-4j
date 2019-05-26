@@ -11,6 +11,11 @@ public class WxapiApplicationTests {
 
     @Test
     public void contextLoads() {
+        int j = 0;
+        for (int i = 0; i < 100; i++) {
+            j = j++;
+        }
+        System.out.println(j);
     }
 
 }

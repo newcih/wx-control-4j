@@ -10,11 +10,9 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class TokenResponse extends BaseResponse {
+public class GetCallBackIPResponse extends BaseResponse {
 
-    @SerializedName("access_token")
-    private String accessToken;
-    @SerializedName("expires_in")
-    private Integer expiresIn;
+    @SerializedName("ip_list")
+    private String[] ipList;
 
 }

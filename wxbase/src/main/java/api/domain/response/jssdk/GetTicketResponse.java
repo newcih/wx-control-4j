@@ -1,4 +1,4 @@
-package api.domain.response.common;
+package api.domain.response.jssdk;
 
 import api.domain.response.BaseResponse;
 import com.google.gson.annotations.SerializedName;
@@ -10,10 +10,9 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class TokenResponse extends BaseResponse {
+public class GetTicketResponse extends BaseResponse {
 
-    @SerializedName("access_token")
-    private String accessToken;
+    private String ticket;
     @SerializedName("expires_in")
     private Integer expiresIn;
 

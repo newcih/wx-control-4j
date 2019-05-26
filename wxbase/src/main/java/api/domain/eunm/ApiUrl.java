@@ -14,6 +14,7 @@ public enum ApiUrl {
     TICKET_GET_TICKET("https://api.weixin.qq.com/cgi-bin/ticket/getticket", RequestMethod.GET),
     MESSAGE_CUSTOM_SEND("https://api.weixin.qq.com/cgi-bin/message/custom/send", RequestMethod.POST),
     QRCODE_CREATE("https://api.weixin.qq.com/cgi-bin/qrcode/create", RequestMethod.POST),
+    GET_CALLBACK_IP("https://api.weixin.qq.com/cgi-bin/getcallbackip", RequestMethod.GET),
     TOKEN("https://api.weixin.qq.com/cgi-bin/token", RequestMethod.GET);
 
     private String url;

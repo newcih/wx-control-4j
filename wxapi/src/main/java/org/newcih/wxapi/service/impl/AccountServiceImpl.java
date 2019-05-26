@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class AccountServiceImpl implements BaseService {
 
     public CreateQrCodeResponse createQrCode(CreateQrCodeParam param, WxInfo wxInfo) {
-        return new WxRequest<CreateQrCodeParam>().request(param, ApiUrl.QRCODE_CREATE, wxInfo, CreateQrCodeResponse.class);
+        return new WxRequest().request(param, ApiUrl.QRCODE_CREATE, wxInfo, CreateQrCodeResponse.class);
     }
 
 }

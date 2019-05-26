@@ -43,10 +43,11 @@ public class FixWxInfoAop {
                     params = (BaseParam) args[i];
                 }
                 if (args[i] instanceof WxInfo) {
-                    if (StringUtils.isEmpty(params.getAppid())) {
+                    WxInfo requestWxInfo = (WxInfo) args[i];
+                    if (StringUtils.isEmpty(requestWxInfo.getAppid())) {
                         return DefaultResponse.fail("接口需要公众号信息，APPID不能为空");
                     }
-                    String appid = params.getAppid();
+                    String appid = requestWxInfo.getAppid();
                     WxInfo wxInfo = wxProperties.getAppIdInnerMap().get(appid);
                     if (wxInfo == null) {
                         return DefaultResponse.fail("不存在APPID为" + appid + "的公众号");

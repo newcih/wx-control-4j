@@ -7,7 +7,4 @@ import lombok.Data;
  */
 @Data
 public class BaseParam {
-
-    protected String appid;
-
 }

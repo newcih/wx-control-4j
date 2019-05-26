@@ -4,6 +4,7 @@ import api.domain.eunm.ApiUrl;
 import api.domain.eunm.RequestMethod;
 import api.domain.params.BaseParam;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import domain.WxInfo;
@@ -29,8 +30,6 @@ public class GetWxResponseService {
      * @return JSON对象请求结果
      */
     public static JsonObject request(BaseParam param, ApiUrl apiurl, WxInfo wxInfo) {
-        log.info("使用公众号{}参数{}请求{}", wxInfo, param, apiurl);
-
         String url = apiurl.toString() + "?access_token=" + wxInfo.getAccessToken();
         if (RequestMethod.POST.equals(apiurl.getRequestMethod())) {
             return postRequest(param, url);
@@ -45,11 +44,13 @@ public class GetWxResponseService {
      * @param url   接口地址
      * @return JSON对象请求结果
      */
-    public static JsonObject getRequest(BaseParam param, String url) {
+    private static JsonObject getRequest(BaseParam param, String url) {
         if (param == null) {
             return HttpUtil.getWithJSON(null, url);
         }
-        JsonObject paramJson = new JsonParser().parse(new Gson().toJson(param)).getAsJsonObject();
+        String str = new Gson().toJson(param);
+        JsonElement jsonElement = new JsonParser().parse(str);
+        JsonObject paramJson = jsonElement.getAsJsonObject();
         return HttpUtil.getWithJSON(paramJson, url);
     }
 
@@ -60,12 +61,12 @@ public class GetWxResponseService {
      * @param url   接口地址
      * @return JSON对象请求结果
      */
-    public static JsonObject postRequest(BaseParam param, String url) {
+    private static JsonObject postRequest(BaseParam param, String url) {
         if (param == null) {
             return HttpUtil.postWithJSON(null, url);
         }
-        return HttpUtil.postWithJSON(new Gson().toJson(param), url);
+        String str = new Gson().toJson(param);
+        return HttpUtil.postWithJSON(str, url);
     }
-
 
 }

@@ -15,12 +15,13 @@ import lombok.NoArgsConstructor;
 @Data
 public class TokenParam extends BaseParam {
 
+    private String appid;
     private String secret;
     @SerializedName("grant_type")
     private String grantType = "client_credential";
 
     public TokenParam(WxInfo wxInfo) {
-        super.appid = wxInfo.getAppid();
+        this.appid = wxInfo.getAppid();
         this.secret = wxInfo.getAppsecret();
     }
 }

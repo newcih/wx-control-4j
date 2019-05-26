@@ -1,7 +1,6 @@
 package util;
 
 import com.google.common.collect.Maps;
-import lombok.Data;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,74 +15,54 @@ public class CacheStorage<T> {
     private Map<String, T> data = new ConcurrentHashMap<>();
     private Map<String, Map.Entry<Long, Long>> keyExpire = new ConcurrentHashMap<>();
 
-    public void set(Class clazz, String key, T value) {
-        set(clazz, key, value, null);
+    public void set(String key, T value) {
+        set(key, value, null);
     }
 
     /**
      * 写入缓存
      *
-     * @param clazz
      * @param key
      * @param value
      * @param expireMillisSecond
      */
-    public void set(Class clazz, String key, T value, Long expireMillisSecond) {
-        set(clazz.getName(), key, value, expireMillisSecond);
-    }
+    public void set(String key, T value, Long expireMillisSecond) {
+        System.out.println("存入key=" + key + ", value=" + value + "，有效期=" + expireMillisSecond);
 
-    /**
-     * 写入缓存
-     *
-     * @param groupId
-     * @param key
-     * @param value
-     * @param expireMillisSecond
-     */
-    public void set(String groupId, String key, T value, Long expireMillisSecond) {
-        System.out.println("存入key=" + groupId + "@" + key + ", value=" + value + "，有效期=" + expireMillisSecond);
-
-        final String finalKey = groupId + "@" + key;
         if (expireMillisSecond != null) {
-            data.put(finalKey, value);
-            keyExpire.put(finalKey, Maps.immutableEntry(System.currentTimeMillis(), expireMillisSecond));
+            data.put(key, value);
+            keyExpire.put(key, Maps.immutableEntry(System.currentTimeMillis(), expireMillisSecond));
         } else {
-            data.put(finalKey, value);
+            data.put(key, value);
         }
-    }
-
-    public T get(Class clazz, String key) {
-        return get(clazz.getName(), key);
     }
 
     /**
      * 获取缓存
      *
-     * @param groupId
      * @param key
      * @return
      */
-    public T get(String groupId, String key) {
-        System.out.println("读取key=" + groupId + "@" + key);
-        final String finalKey = groupId + "@" + key;
-        clearKeyExpire(finalKey);
-        return data.get(finalKey);
+    public T get(String key) {
+        System.out.println("读取key=" + key);
+        clearKeyExpire(key);
+        return data.get(key);
     }
 
     /**
      * 清除已过期的key-value数据
      *
-     * @param finalKey
+     * @param key
      */
-    private void clearKeyExpire(String finalKey) {
-        if (keyExpire.get(finalKey) == null) {
+    private void clearKeyExpire(String key) {
+        if (keyExpire.get(key) == null) {
             return;
         }
-        Map.Entry<Long, Long> expireEntry = keyExpire.get(finalKey);
+        Map.Entry<Long, Long> expireEntry = keyExpire.get(key);
         if (expireEntry.getKey() + expireEntry.getValue() < System.currentTimeMillis()) {
-            keyExpire.remove(finalKey);
-            data.remove(finalKey);
-            System.out.println("清除过期key=" + finalKey);
+            keyExpire.remove(key);
+            data.remove(key);
+            System.out.println("清除过期key=" + key);
         }
     }
 }

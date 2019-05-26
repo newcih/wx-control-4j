@@ -17,5 +17,6 @@ public class WxInfo {
     private String encodingAesKey;
     private volatile String accessToken;
     private volatile String jsapiTicket;
+    private volatile String apiTicket;
 
 }
