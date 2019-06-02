@@ -1,32 +1,26 @@
 server:
     port: 2400
 
+# 数据库创库创表脚本是resources/script目录下的init.sql文件
 spring:
     application:
         name: 微信中控服务
-#  datasource:
-#    druid:
-#      username: root
-#      password: 12345q
-#      url: jdbc:mysql://localhost:3306/wx_control?useUnicode=true&characterEncoding=utf-8&useSSL=false
-#      driver-class-name: com.mysql.cj.jdbc.Driver
-#      initial-size: 10
-#      max-active: 50
-#      min-idle: 10
-#      max-wait: 60000
-#      time-between-eviction-runs-millis: 60000
-#      min-evictable-idle-time-millis: 300000
-#      validation-query: select 1 from dual
-#      test-while-idle: true
-#mybatis:
-#  type-aliases-package: org.newcih.wxapi.domain
-
-# 微信配置
-wxinfo:
-    #  accessTokenRefreshSecond: 5400
-    # 公众号列表
-    list:
-        - {appid: 'your appid', appsecret: 'your secret', wechatId: 'your wechatid', token: 'your token', encodingAesKey: 'your aes key'}
+    datasource:
+        druid:
+            username: root
+            password: 12345q
+            url: jdbc:mysql://localhost:3306/wx_control?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+            driver-class-name: com.mysql.cj.jdbc.Driver
+            initial-size: 10
+            max-active: 50
+            min-idle: 10
+            max-wait: 60000
+            time-between-eviction-runs-millis: 60000
+            min-evictable-idle-time-millis: 300000
+            validation-query: select 1 from dual
+            test-while-idle: true
+mybatis:
+    type-aliases-package: org.newcih.wxapi.domain
 
 # 日志配置
 logging:

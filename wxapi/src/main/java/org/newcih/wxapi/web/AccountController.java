@@ -1,8 +1,8 @@
 package org.newcih.wxapi.web;
 
 import api.domain.params.account.CreateQrCodeParam;
-import domain.WxInfo;
-import org.newcih.wxapi.domain.response.DefaultResponse;
+import org.newcih.wxapi.domain.WxDataInfo;
+import org.newcih.wxapi.domain.response.Response;
 import org.newcih.wxapi.service.impl.AccountServiceImpl;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,8 +23,8 @@ public class AccountController extends BaseWxController {
     }
 
     @PostMapping("createQrCode")
-    public DefaultResponse createQrCode(@RequestBody CreateQrCodeParam param, WxInfo wxInfo) {
-        return DefaultResponse.success(accountService.createQrCode(param, wxInfo));
+    public Response createQrCode(@RequestBody CreateQrCodeParam param, WxDataInfo wxDataInfo) {
+        return Response.success(accountService.createQrCode(param, wxDataInfo));
     }
 
 }
