@@ -1,6 +1,6 @@
 CREATE DATABASE IF NOT EXISTS wx_control;
 
-DROP TABLE wx_control.wx_info;
+DROP TABLE IF EXISTS wx_control.wx_info;
 CREATE TABLE wx_control.wx_info
 (
     id                INT AUTO_INCREMENT PRIMARY KEY,
@@ -20,3 +20,6 @@ CREATE TABLE wx_control.wx_info
 
 ALTER TABLE wx_control.wx_info
     ADD INDEX (appid, status);
+
+ALTER TABLE wx_control.wx_info
+    ADD INDEX (wechat_id);

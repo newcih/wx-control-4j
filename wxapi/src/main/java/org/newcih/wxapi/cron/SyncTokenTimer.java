@@ -44,7 +44,6 @@ public class SyncTokenTimer {
         List<WxDataInfo> wxDataInfoList = commonService.listWxDataInfos();
         log.info(TIMERMARKER, "定时器开始更新公众号AccessToken，本次待更新{}个公众号", wxDataInfoList.size());
         wxDataInfoList.parallelStream()
-                .peek(System.out::println)
                 .forEach(wxDataInfo -> {
                     boolean updateFlag = commonService.refreshToken(wxDataInfo);
                     int currentRetryTime = 3;

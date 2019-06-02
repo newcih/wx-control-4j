@@ -2,14 +2,17 @@ package domain;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 公众号详细信息
  *
  * @author NEWCIH
  */
 @Data
-public class WxInfo {
+public class WxInfo implements Serializable {
 
+    private static final long serialVersionUID = 6349959859571679754L;
     private String appid;
     private String appsecret;
     private String wechatId;

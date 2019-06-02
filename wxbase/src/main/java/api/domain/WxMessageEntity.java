@@ -5,6 +5,7 @@ import domain.WxInfo;
 import lombok.Data;
 import util.StringUtil;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -13,9 +14,11 @@ import java.util.Map;
  * @author NEWCIH
  */
 @Data
-public class WxMessageEntity {
+public class WxMessageEntity implements Serializable {
 
-    private WxInfo wxInfo;
+    private static final long serialVersionUID = 5477754815518494814L;
+
+    private String appid;
     private String toUserName;
     private String fromUserName;
     private String createTime;
@@ -40,8 +43,7 @@ public class WxMessageEntity {
     private String url;
 
     public WxMessageEntity(Map<String, String> data, WxInfo wxInfo) {
-        System.out.println("原始数据" + data);
-        this.wxInfo = wxInfo;
+        this.setAppid(wxInfo.getAppid());
         this.setToUserName(data.get("ToUserName"));
         this.setFromUserName(data.get("FromUserName"));
         this.setCreateTime(data.get("CreateTime"));

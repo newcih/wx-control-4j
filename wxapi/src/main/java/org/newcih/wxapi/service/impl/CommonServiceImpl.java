@@ -37,6 +37,10 @@ public class CommonServiceImpl implements BaseService {
         this.wxDataInfoMapper = wxDataInfoMapper;
     }
 
+    public WxDataInfo getWxInfoByWechatId(String wechatId) {
+        return wxDataInfoMapper.getByWechatId(wechatId);
+    }
+
     /**
      * 获取公众号列表
      *
@@ -47,7 +51,7 @@ public class CommonServiceImpl implements BaseService {
     }
 
     public WxDataInfo getWxDataInfo(Integer id) {
-        return wxDataInfoMapper.get(id);
+        return wxDataInfoMapper.getById(id);
     }
 
     /**
@@ -109,8 +113,6 @@ public class CommonServiceImpl implements BaseService {
     public boolean refreshToken(WxDataInfo wxDataInfo) {
 
         LocalDateTime tokenExpireTime = wxDataInfo.getTokenUpdateTime().plusSeconds(UPDATE_TOKEN_SECOND_PERIOD);
-        log.info("{} - {}", wxDataInfo.getTokenUpdateTime(), UPDATE_TOKEN_SECOND_PERIOD);
-        log.info("{}", tokenExpireTime);
         if (!LocalDateTime.now().isAfter(tokenExpireTime)) {
             log.info("公众号{}当前未到待更新token时间，不执行刷新操作", wxDataInfo);
             return true;

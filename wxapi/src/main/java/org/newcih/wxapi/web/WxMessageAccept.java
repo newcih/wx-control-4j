@@ -1,12 +1,13 @@
 package org.newcih.wxapi.web;
 
 import api.domain.WxMessageEntity;
-import domain.WxInfo;
-import org.newcih.wxapi.config.prop.WxProperties;
-import org.newcih.wxapi.service.message.MessageHandler;
-import org.newcih.wxapi.util.ThreadUtil;
+import org.newcih.wxapi.domain.WxDataInfo;
+import org.newcih.wxapi.service.impl.CommonServiceImpl;
+import org.newcih.wxapi.service.message.MessagePushService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,9 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.newcih.wxapi.util.XmlUtil.xmlToMap;
 
@@ -28,13 +27,14 @@ import static org.newcih.wxapi.util.XmlUtil.xmlToMap;
 public class WxMessageAccept extends BaseWxController {
 
     private static final Logger log = LoggerFactory.getLogger(WxMessageAccept.class);
+    private static final Marker MESSAGE_MARKER = MarkerFactory.getMarker("MESSAGE");
 
-    private final WxProperties wxProperties;
-    private final List<MessageHandler> messageHandlerList;
+    private final CommonServiceImpl commonService;
+    private final MessagePushService messagePushService;
 
-    public WxMessageAccept(WxProperties wxProperties, List<MessageHandler> messageHandlerList) {
-        this.wxProperties = wxProperties;
-        this.messageHandlerList = messageHandlerList;
+    public WxMessageAccept(CommonServiceImpl commonService, MessagePushService messagePushService) {
+        this.commonService = commonService;
+        this.messagePushService = messagePushService;
     }
 
     /**
@@ -43,19 +43,12 @@ public class WxMessageAccept extends BaseWxController {
     @PostMapping(value = "messageAccept")
     public void messageAccept(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String> messageData = xmlToMap(request);
-        WxInfo wxInfo = wxProperties.getWechatIdInnerMap().get(messageData.get("ToUserName"));
-        WxMessageEntity messageParams = new WxMessageEntity(messageData, wxInfo);
+        WxDataInfo wxDataInfo = commonService.getWxInfoByWechatId(messageData.get("ToUserName"));
+        WxMessageEntity messageParams = new WxMessageEntity(messageData, wxDataInfo.getWxInfo());
+        log.info(MESSAGE_MARKER, "接受微信消息{}", messageParams);
 
         try {
-            Optional<MessageHandler> messageHandlerOptional = messageHandlerList.parallelStream()
-                    .filter(handler -> handler.getEvent().equals(messageParams.getWxMessageEvnet()))
-                    .findFirst();
-            if (messageHandlerOptional.isPresent()) {
-                MessageHandler messageHandler = messageHandlerOptional.get();
-                ThreadUtil.executor.execute(messageHandler::handle);
-            } else {
-                log.warn("当前微信平台{}消息找不到处理方法", messageParams);
-            }
+            messagePushService.sendMessage(messageParams);
         } finally {
             try {
                 PrintWriter writer = response.getWriter();

@@ -8,17 +8,17 @@
 
 + 开箱即用
 + 定时检测AccessToken等固定有效期的token或ticket的有效性，确保不会因其它平台刷新造成失效
-+ 单机部署可避免数据库配置，确保便捷和高可用
-+ 支持负载均衡运行，和项目安全重启不中断 (如果要设置负载均衡运行，则需要开启数据库配置) [**暂未实现，目前支持单机无数据库部署**]
-+ 支持多公众号服务器地址配置，接收多公众号的微信消息推送，使用消息队列广播发布形式，支持多个子项目订阅相关公众号的消息推送
++ 支持负载均衡运行，和项目安全重启不中断 
++ 支持多公众号服务器地址配置，接收多公众号的微信消息推送，使用消息队列广播发布形式，支持多个子项目订阅相关公众号的消息推送 
 
 ### 使用技术介绍
 
 + 基于JDK 8+
 + 基于SpringBoot 2.x
-+ 无需数据库配置
 
 ### 项目结构介绍
+
+项目使用Maven多模块开发，wxbase封装了基本的微信请求能力，wxapi则是通过wxbase模块的能力，组织成可用的Web服务，对外提供借口和微信服务器配置。
 
 + **wxbase**
     基本的微信公众号接口调用支持
@@ -63,31 +63,22 @@ server:
 spring:
     application:
         name: 微信中控服务
-#  datasource:
-#    druid:
-#      username: root
-#      password: 12345q
-#      url: jdbc:mysql://localhost:3306/wx_control?useUnicode=true&characterEncoding=utf-8&useSSL=false
-#      driver-class-name: com.mysql.cj.jdbc.Driver
-#      initial-size: 10
-#      max-active: 50
-#      min-idle: 10
-#      max-wait: 60000
-#      time-between-eviction-runs-millis: 60000
-#      min-evictable-idle-time-millis: 300000
-#      validation-query: select 1 from dual
-#      test-while-idle: true
-#mybatis:
-#  type-aliases-package: org.newcih.wxapi.domain
-
-# 微信配置
-wxinfo:
-    #  accessTokenRefreshSecond: 5400
-    # 公众号列表
-    list:
-        - {appid: 'your appid 1', appsecret: 'your appsecret 1', wechatId: 'your wechatId 1', token: '', encodingAesKey: ''}
-        - {appid: 'your appid 2', appsecret: 'your appsecret 2', wechatId: 'your wechatId 2', token: '', encodingAesKey: ''}
-        - {appid: 'your appid 3', appsecret: 'your appsecret 3', wechatId: 'your wechatId 3', token: '', encodingAesKey: ''}
+  datasource:
+    druid:
+      username: root
+      password: 12345q
+      url: jdbc:mysql://localhost:3306/wx_control?useUnicode=true&characterEncoding=utf-8&useSSL=false
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      initial-size: 10
+      max-active: 50
+      min-idle: 10
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: select 1 from dual
+      test-while-idle: true
+mybatis:
+  type-aliases-package: org.newcih.wxapi.domain
 
 # 日志配置
 logging:
@@ -98,6 +89,8 @@ logging:
 
 ```
 
+其中数据库的建库脚本见script目录下的sql文件
+
 ### 关于项目配置的FAQ
 
 + 为什么公众号列表那里需要配置wechatId呢？这是什么？
@@ -105,6 +98,8 @@ logging:
 
 
 ## WxBase模块接入示例
+
+wxbase封装了基本的微信接口请求能力，为了方便wxbase模块做个人个性化接入，这里提供wxbase一些使用示例。
 
 + 调用微信接口获取AccessToken
 ```java
@@ -235,5 +230,4 @@ Content-Type: application/json
 
 # 后续开发进展
 
-+ 接入微信服务器地址配置，以消息队列的形式分发多公众号的微信消息推送
 + 丰富更多接口封装
