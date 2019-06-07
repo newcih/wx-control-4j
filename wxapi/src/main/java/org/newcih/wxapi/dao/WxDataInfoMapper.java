@@ -55,6 +55,6 @@ public interface WxDataInfoMapper {
     String getAccessTokenByAppid(@Param("appid") String appid);
 
     @ResultMap("basicMap")
-    @Select({"SELECT", BASIC_RESULT, "FROM wx_info WHERE appid = #{appid} AND status = '1'"})
+    @Select({"SELECT", TOKEN_DATA, "FROM wx_info WHERE appid = #{appid} AND status = '1'"})
     WxDataInfo getByAppid(@Param("appid") String appid);
 }

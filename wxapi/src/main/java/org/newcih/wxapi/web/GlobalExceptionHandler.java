@@ -3,6 +3,7 @@ package org.newcih.wxapi.web;
 import org.newcih.wxapi.domain.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -20,4 +21,8 @@ public class GlobalExceptionHandler {
         return Response.fail(e.getMessage());
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Response handleArgumentNotValid(MethodArgumentNotValidException anv) {
+        return Response.fail(anv.getBindingResult().getFieldError().getDefaultMessage());
+    }
 }
