@@ -1,6 +1,6 @@
 package org.newcih.wxapi.service.message.impl;
 
-import api.domain.eunm.WxMessageEvnet;
+import api.domain.eunm.WechatMessageEventEnum;
 import org.newcih.wxapi.service.message.MessageHandler;
 import org.springframework.stereotype.Component;
 
@@ -13,12 +13,12 @@ import java.util.function.Consumer;
 public class UnSubscribeHandler implements MessageHandler {
 
     @Override
-    public WxMessageEvnet getEvent() {
-        return WxMessageEvnet.EVENT_UNSUBSCRIBE;
+    public WechatMessageEventEnum getEvent() {
+        return WechatMessageEventEnum.EVENT_UNSUBSCRIBE;
     }
 
     @Override
-    public Consumer<WxMessageEvnet> handle() {
+    public Consumer<WechatMessageEventEnum> handle() {
         return wxMessageEvnet -> {
 
         };

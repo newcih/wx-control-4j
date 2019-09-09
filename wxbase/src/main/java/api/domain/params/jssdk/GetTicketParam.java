@@ -1,6 +1,7 @@
 package api.domain.params.jssdk;
 
 import api.domain.params.BaseParam;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -9,6 +10,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@AllArgsConstructor
 public class GetTicketParam extends BaseParam {
 
     /**

@@ -1,6 +1,6 @@
 package org.newcih.wxapi.service.message;
 
-import api.domain.eunm.WxMessageEvnet;
+import api.domain.eunm.WechatMessageEventEnum;
 
 import java.util.function.Consumer;
 
@@ -11,8 +11,8 @@ import java.util.function.Consumer;
  */
 public interface MessageHandler {
 
-    WxMessageEvnet getEvent();
+    WechatMessageEventEnum getEvent();
 
-    Consumer<WxMessageEvnet> handle();
+    Consumer<WechatMessageEventEnum> handle();
 
 }

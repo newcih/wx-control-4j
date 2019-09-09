@@ -1,33 +1,22 @@
+#####################################################################
+#
+# 项目配置
+#
+#####################################################################
 server:
-  port: 2400
-
-# 数据库创库创表脚本是resources/script目录下的init.sql文件
+  port: 8080
+#####################################################################
+#
+# 配置文件选择
+#
+#####################################################################
 spring:
+  cache:
+    type: redis
+    redis:
+      key-prefix: wechat_control_
+      time-to-live: 60000
+  profiles:
+    active: @env@
   application:
     name: 微信中控服务
-  datasource:
-    druid:
-      username: root
-      password: 12345q
-      url: jdbc:mysql://localhost:3306/wx_control?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      initial-size: 10
-      max-active: 50
-      min-idle: 10
-      max-wait: 60000
-      time-between-eviction-runs-millis: 60000
-      min-evictable-idle-time-millis: 300000
-      validation-query: select 1 from dual
-      test-while-idle: true
-mybatis:
-  type-aliases-package: org.newcih.wxapi.domain
-
-# Rabbitmq 消息队列配置
-
-# 日志配置
-logging:
-  level:
-    root: info
-  pattern:
-    console: '[%d{yyyy-MM-dd HH:mm:ss.sss }] [%p] %marker %m%n'
-

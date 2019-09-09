@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    username: newcih
+    password: newCIH2019
+    url: jdbc:mysql://192.168.1.102:3306/wechat_control?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 5
+      idle-timeout: 180000
+      maximum-pool-size: 10
+      auto-commit: true
+      pool-name: MyHikariPool
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: select 1
+mybatis:
+  type-aliases-package: org.newcih.wxapi.domain
+
+# Rabbitmq 消息队列配置
+

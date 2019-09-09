@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 @SpringBootConfiguration
 public class RabbitMqConfig {
 
-    public static final String EXCHANGE_NAME = "wx.message";
+    public static final String EXCHANGE_NAME = "wechat.message";
 
     @Bean
     public Exchange exchange() {

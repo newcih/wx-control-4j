@@ -2,7 +2,8 @@ package api.domain.params.common;
 
 import api.domain.params.BaseParam;
 import com.google.gson.annotations.SerializedName;
-import domain.WxInfo;
+import domain.WechatInfo;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -20,8 +21,8 @@ public class TokenParam extends BaseParam {
     @SerializedName("grant_type")
     private String grantType = "client_credential";
 
-    public TokenParam(WxInfo wxInfo) {
-        this.appid = wxInfo.getAppid();
-        this.secret = wxInfo.getAppsecret();
+    public TokenParam(WechatInfo wechatInfo) {
+        this.appid = wechatInfo.getAppid();
+        this.secret = wechatInfo.getAppsecret();
     }
 }

@@ -1,13 +1,12 @@
 package org.newcih.wxapi.web;
 
-import api.domain.params.common.TokenParam;
-import api.domain.params.jssdk.GetTicketParam;
-import org.apache.ibatis.annotations.ResultMap;
-import org.newcih.wxapi.domain.WxDataInfo;
+import org.newcih.wxapi.domain.WechatDataInfo;
 import org.newcih.wxapi.domain.request.BaseRequestParam;
 import org.newcih.wxapi.domain.response.Response;
-import org.newcih.wxapi.service.impl.CommonServiceImpl;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
@@ -16,13 +15,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("token")
-public class TokenController extends BaseWxController {
-
-    private final CommonServiceImpl commonService;
-
-    public TokenController(CommonServiceImpl commonService) {
-        this.commonService = commonService;
-    }
+public class TokenController extends BaseWechatController {
 
     /**
      * 获取AccessToken
@@ -32,17 +25,17 @@ public class TokenController extends BaseWxController {
      * @return
      */
     @PostMapping("accessToken")
-    public Response getAccessToken(@RequestBody @Valid BaseRequestParam param, WxDataInfo wxDataInfo) {
-        return Response.success(wxDataInfo.getWxInfo().getAccessToken());
+    public Response getAccessToken(@RequestBody @Valid BaseRequestParam param, WechatDataInfo wxDataInfo) {
+        return Response.success(wxDataInfo.getWechatInfo().getAccessToken());
     }
 
     @PostMapping("apiTicket")
-    public Response getApiTicket(@RequestBody @Valid BaseRequestParam param, WxDataInfo wxDataInfo) {
-        return Response.success(wxDataInfo.getWxInfo().getApiTicket());
+    public Response getApiTicket(@RequestBody @Valid BaseRequestParam param, WechatDataInfo wxDataInfo) {
+        return Response.success(wxDataInfo.getWechatInfo().getApiTicket());
     }
 
     @PostMapping("jsapiTicket")
-    public Response getJsApiTicket(@RequestBody @Valid BaseRequestParam param, WxDataInfo wxDataInfo) {
-        return Response.success(wxDataInfo.getWxInfo().getJsapiTicket());
+    public Response getJsApiTicket(@RequestBody @Valid BaseRequestParam param, WechatDataInfo wxDataInfo) {
+        return Response.success(wxDataInfo.getWechatInfo().getJsapiTicket());
     }
 }

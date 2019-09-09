@@ -43,14 +43,9 @@ public class HttpUtil {
         }
         builder.url(url);
 
-        log.info(MARKER, "[POST-{}]使用参数{}请求{}", requestId, param, url);
-
         try {
             Response response = client.newCall(builder.build()).execute();
             responseText = response.body().string();
-
-            log.info(MARKER, "[POST-{}]请求结果{}", requestId, responseText);
-
             return new JsonParser().parse(responseText).getAsJsonObject();
         } catch (Exception e) {
             log.error(MARKER, "[POST-{}]请求发生异常", requestId, e);
@@ -78,13 +73,8 @@ public class HttpUtil {
 
         Request request = new Request.Builder().url(sb.toString()).get().build();
         try {
-            log.info(MARKER, "[GET-{}]使用参数{}请求{}", requestId, param, sb.toString());
-
             Response response = client.newCall(request).execute();
             responseText = response.body().string();
-
-            log.info(MARKER, "[GET-{}]请求结果{}", requestId, responseText);
-
             return new JsonParser().parse(responseText).getAsJsonObject();
         } catch (Exception e) {
             log.error(MARKER, "[GET-{}]请求发生异常", requestId, e);

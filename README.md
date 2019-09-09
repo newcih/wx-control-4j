@@ -110,7 +110,7 @@ import api.domain.response.account.CreateQrCodeResponse;
 import api.domain.response.common.TokenResponse;
 import api.web.WxRequest;
 import com.google.gson.JsonObject;
-import domain.WxInfo;
+import domain.WechatInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.internal.runners.JUnit4ClassRunner;

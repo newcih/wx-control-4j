@@ -1,6 +1,5 @@
 package org.newcih.wxapi.config.aop;
 
-import net.bytebuddy.build.HashCodeAndEqualsPlugin;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -35,7 +34,7 @@ public class SignAop {
     /**
      * 微信事件推算
      */
-    @Pointcut("execution(* org.newcih.wxapi.web.WxMessageAccept.messageAccept(..))")
+    @Pointcut("execution(* org.newcih.wxapi.web.WechatMessageAccept.messageAccept(..))")
     public void messageAccept() {
     }
 
