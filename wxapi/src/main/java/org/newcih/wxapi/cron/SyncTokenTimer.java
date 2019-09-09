@@ -40,10 +40,10 @@ public class SyncTokenTimer {
     /**
      * 定时器刷新AccessToken
      * access_token的有效期目前为2个小时，需定时刷新，重复获取将导致上次获取的access_token失效。
-     * 每1.5小时执行一次
+     * 每1小时执行一次
      * <p>
      */
-    @Scheduled(fixedRate = 6 * 1000L)
+    @Scheduled(cron = "0 0 * * * ?")
     public void syncAccessToken() {
         // 使用Redis构建分布式锁，避免多机情况下多次调用定时器
         if (!lockService.lock(SyncTokenTimer.class.getName())) {
