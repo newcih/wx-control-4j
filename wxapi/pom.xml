@@ -41,11 +41,6 @@
         </dependency>
         <!--微信服务器消息加解密专用-->
         <dependency>
-            <groupId>com.qq.weixin.mp</groupId>
-            <artifactId>aes</artifactId>
-            <version>1.6</version>
-        </dependency>
-        <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>1.13</version>
