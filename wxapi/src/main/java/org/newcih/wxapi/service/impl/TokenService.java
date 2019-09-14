@@ -52,8 +52,6 @@ public class TokenService {
             return true;
         }
 
-        // TODO 这里新增一个分布式锁，避免多机器环境下重复对同一个公众号的数据进行刷新
-
         /**
          * 刷新access token
          */
