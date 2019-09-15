@@ -1,0 +1,1 @@
+docker run -d --name redis -p 6379:6379 -v $HOME/program/docker/config/redis/redis.conf:/etc/redis/redis.conf redis redis-server /etc/redis/redis.conf --appendonly yes
