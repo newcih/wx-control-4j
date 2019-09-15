@@ -1,7 +1,7 @@
 spring:
   # 数据库配置
   datasource:
-    url: jdbc:mysql://192.168.1.102:3306/wechat_control?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://47.98.159.100:3306/wechat_control?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     username: root
     password: newCIH2019
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -16,13 +16,13 @@ spring:
       connection-test-query: select 1
   # 消息队列配置
   rabbitmq:
-    addresses: 192.168.1.102:5672
+    addresses: 47.98.159.100:5672
     username: admin
     password: newCIH2019
     publisher-confirms: true
   # Redis配置
   redis:
-    host: 192.168.1.102
+    host: 47.98.159.100
     password: newCIH2019
     database: 0
     jedis:
