@@ -57,6 +57,7 @@ public class TokenService {
         if (StringUtil.notBlank.test(tokenResponse.getAccessToken())) {
             String accessToken = tokenResponse.getAccessToken();
             redisTemplate.opsForValue().set(getClass().getName() + REDIS_KEY_ACCESS_TOKEN_SUFFIX, accessToken);
+            wechatDataInfo.getWechatInfo().setAccessToken(accessToken);
         }
 
         /**
