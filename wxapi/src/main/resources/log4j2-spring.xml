@@ -9,7 +9,7 @@
         <!-- %logger{36} 表示 Logger 名字最长36个字符 -->
         <property name="LOG_PATTERN" value="%date{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n" />
         <!-- 定义日志存储的路径，不要配置相对路径 -->
-        <property name="FILE_PATH" value="${sys:user.home}/Logs/wechat_control"/>
+        <property name="FILE_PATH" value="/var/log/program/wechat_control"/>
         <property name="FILE_NAME" value="wechat_control"/>
     </Properties>
 
