@@ -43,7 +43,7 @@ public class SyncTokenTimer {
      * 每1小时执行一次
      * <p>
      */
-    @Scheduled(cron = "0 0 * * * ?")
+    @Scheduled(cron = "0 0/2 * * * ?")
     public void syncAccessToken() {
         // 使用Redis构建分布式锁，避免多机情况下多次调用定时器
         if (!lockService.lock(SyncTokenTimer.class.getName())) {
@@ -55,16 +55,7 @@ public class SyncTokenTimer {
 
         List<WechatDataInfo> wxDataInfoList = wechatInfoService.listWechatDataInfos();
         logger.info("定时器开始更新公众号AccessToken，本次待更新{}个公众号", wxDataInfoList.size());
-        wxDataInfoList.parallelStream()
-                .forEach(wxDataInfo -> {
-                    boolean updateFlag = tokenService.refreshToken(wxDataInfo);
-                    int currentRetryTime = 3;
-                    while (!updateFlag && (currentRetryTime++) < MAX_RETRY_TIME) {
-                        logger.info("公众号{}定时器刷新token写入数据库失败，进行重试", wxDataInfo);
-                        WechatDataInfo temp = wechatInfoService.getWechatDataInfo(wxDataInfo.getId());
-                        updateFlag = tokenService.refreshToken(temp);
-                    }
-                });
+        wxDataInfoList.parallelStream().forEach(tokenService::refreshToken);
     }
 
 }

@@ -4,6 +4,9 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * @author newcih
+ */
 @Data
 public class BaseRequestParam {
 

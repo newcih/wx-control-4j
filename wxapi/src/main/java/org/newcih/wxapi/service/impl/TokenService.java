@@ -7,18 +7,15 @@ import api.domain.response.ResponseCode;
 import api.domain.response.common.TokenResponse;
 import api.domain.response.jssdk.GetTicketResponse;
 import api.service.WechatRequest;
-import org.newcih.wxapi.dao.WechatDataInfoMapper;
 import org.newcih.wxapi.domain.WechatDataInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import util.StringUtil;
 
-import java.time.LocalDateTime;
 import java.util.function.Predicate;
-
-import static org.newcih.wxapi.cron.SyncTokenTimer.UPDATE_TOKEN_SECOND_PERIOD;
 
 /**
  * @author newcih
@@ -27,15 +24,21 @@ import static org.newcih.wxapi.cron.SyncTokenTimer.UPDATE_TOKEN_SECOND_PERIOD;
 @Transactional(rollbackFor = Exception.class)
 public class TokenService {
 
-    public static Predicate<WechatDataInfo> accessTokenIsValid = wechatDataInfo ->
-            ResponseCode.ACCESSTOKEN_INVALID.equals(WechatRequest.getCallBackIP.andThen(BaseResponse::getErrcode).apply(null, wechatDataInfo.getWechatInfo()));
-
-    private WechatDataInfoMapper wechatDataInfoMapper;
+    private final RedisTemplate<String, String> redisTemplate;
+    static final String REDIS_KEY_ACCESS_TOKEN_SUFFIX = "_access_token";
+    static final String REDIS_KEY_API_TICKET_SUFFIX = "_api_ticket";
+    static final String REDIS_KEY_JS_API_TICKET_SUFFIX = "_js_api_ticket";
     private static final Logger logger = LoggerFactory.getLogger(TokenService.class);
 
-    public TokenService(WechatDataInfoMapper wechatDataInfoMapper) {
-        this.wechatDataInfoMapper = wechatDataInfoMapper;
+    public TokenService(RedisTemplate<String, String> redisTemplate) {
+        this.redisTemplate = redisTemplate;
     }
+
+    /**
+     * 判断accessToken是否有效
+     */
+    public static Predicate<WechatDataInfo> accessTokenIsValid = wechatDataInfo ->
+            ResponseCode.ACCESSTOKEN_INVALID.equals(WechatRequest.getCallBackIP.andThen(BaseResponse::getErrcode).apply(null, wechatDataInfo.getWechatInfo()));
 
     /**
      * access_token 是公众号的全局唯一接口调用凭据，公众号调用各接口时都需使用access_token。
@@ -45,13 +48,7 @@ public class TokenService {
      * @param wechatDataInfo
      * @return
      */
-    public boolean refreshToken(WechatDataInfo wechatDataInfo) {
-        LocalDateTime tokenExpireTime = wechatDataInfo.getTokenUpdateTime().plusSeconds(UPDATE_TOKEN_SECOND_PERIOD);
-        if (!LocalDateTime.now().isAfter(tokenExpireTime) && accessTokenIsValid.test(wechatDataInfo)) {
-            logger.info("公众号{}当前未到待更新token时间，且AccessToken仍有效，不执行刷新操作", wechatDataInfo);
-            return true;
-        }
-
+    public void refreshToken(WechatDataInfo wechatDataInfo) {
         /**
          * 刷新access token
          */
@@ -59,7 +56,7 @@ public class TokenService {
         TokenResponse tokenResponse = WechatRequest.getToken.apply(tokenParam, wechatDataInfo.getWechatInfo());
         if (StringUtil.notBlank.test(tokenResponse.getAccessToken())) {
             String accessToken = tokenResponse.getAccessToken();
-            wechatDataInfo.getWechatInfo().setAccessToken(accessToken);
+            redisTemplate.opsForValue().set(getClass().getName() + REDIS_KEY_ACCESS_TOKEN_SUFFIX, accessToken);
         }
 
         /**
@@ -69,7 +66,7 @@ public class TokenService {
         GetTicketResponse jsApiTicketResponse = WechatRequest.getTicket.apply(jsApiTicketParam, wechatDataInfo.getWechatInfo());
         if (ResponseCode.SUCCESS.equals(jsApiTicketResponse.getErrcode())) {
             String jsApiTicket = jsApiTicketResponse.getTicket();
-            wechatDataInfo.getWechatInfo().setJsapiTicket(jsApiTicket);
+            redisTemplate.opsForValue().set(getClass().getName() + REDIS_KEY_JS_API_TICKET_SUFFIX, jsApiTicket);
         }
 
         /**
@@ -79,14 +76,10 @@ public class TokenService {
         GetTicketResponse apiTicketResponse = WechatRequest.getTicket.apply(apiTicketParam, wechatDataInfo.getWechatInfo());
         if (ResponseCode.SUCCESS.equals(apiTicketResponse.getErrcode())) {
             String apiTicket = apiTicketResponse.getTicket();
-            wechatDataInfo.getWechatInfo().setApiTicket(apiTicket);
+            redisTemplate.opsForValue().set(getClass().getName() + REDIS_KEY_API_TICKET_SUFFIX, apiTicket);
         }
 
-        wechatDataInfo.setTokenUpdateTime(LocalDateTime.now());
-        Integer resultNum = wechatDataInfoMapper.updateToken(wechatDataInfo);
         logger.info("执行公众号{}的Token刷新操作，本次刷新Token -> {}, JsApiTicket -> {}, WxCardTicket -> {}", wechatDataInfo, tokenResponse.getAccessToken(), jsApiTicketResponse.getTicket(), apiTicketResponse.getTicket());
-
-        return resultNum >= 1;
     }
 
 }

@@ -3,14 +3,14 @@ package org.newcih.wxapi.service.impl;
 import domain.WechatInfo;
 import org.newcih.wxapi.dao.WechatDataInfoMapper;
 import org.newcih.wxapi.domain.WechatDataInfo;
-import org.newcih.wxapi.service.CacheService;
+import org.newcih.wxapi.service.BaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,15 +22,15 @@ import java.util.List;
 @Service
 @CacheConfig(cacheNames = "wechat_infos")
 @Transactional(rollbackFor = Exception.class)
-public class WechatInfoService {
+public class WechatInfoService extends BaseService {
 
     private static final Logger logger = LoggerFactory.getLogger(WechatInfoService.class);
     private WechatDataInfoMapper wechatDataInfoMapper;
-    private CacheService cacheService;
+    private RedisTemplate<String, String> redisTemplate;
 
-    public WechatInfoService(WechatDataInfoMapper wechatDataInfoMapper, @Qualifier("redisCache") CacheService cacheService) {
+    public WechatInfoService(WechatDataInfoMapper wechatDataInfoMapper, RedisTemplate redisTemplate) {
         this.wechatDataInfoMapper = wechatDataInfoMapper;
-        this.cacheService = cacheService;
+        this.redisTemplate = redisTemplate;
     }
 
 
@@ -111,13 +111,33 @@ public class WechatInfoService {
     }
 
     /**
-     * 根据Appid获取AccessToken
+     * 根据appid获取access token
      *
      * @param appid
      * @return
      */
     public String getAccessTokenByAppId(String appid) {
-        return wechatDataInfoMapper.getAccessTokenByAppid(appid);
+        return redisTemplate.opsForValue().get(TokenService.class.getName() + TokenService.REDIS_KEY_ACCESS_TOKEN_SUFFIX);
+    }
+
+    /**
+     * 根据appid获取js api ticket
+     *
+     * @param appid
+     * @return
+     */
+    public String getJsApiTicketByAppId(String appid) {
+        return redisTemplate.opsForValue().get(TokenService.class.getName() + TokenService.REDIS_KEY_JS_API_TICKET_SUFFIX);
+    }
+
+    /**
+     * 根据appid获取api ticket
+     *
+     * @param appid
+     * @return
+     */
+    public String getApiTicketByAppId(String appid) {
+        return redisTemplate.opsForValue().get(TokenService.class.getName() + TokenService.REDIS_KEY_API_TICKET_SUFFIX);
     }
 
     /**
@@ -126,8 +146,9 @@ public class WechatInfoService {
      * @param appid
      * @return
      */
+    @Cacheable(key = "#appid")
     public WechatDataInfo getByAppid(String appid) {
-        return wechatDataInfoMapper.getByAppid(appid);
+        return wechatDataInfoMapper.getByAppId(appid);
     }
 
 
